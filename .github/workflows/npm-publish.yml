@@ -3,34 +3,31 @@ name: Deploy React App
 on:
   push:
     branches:
-      - main  
-      
+      - main  # Runs when changes are pushed to the main branch
+
 jobs:
   deploy:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout Repository
-        uses: actions/checkout@v4
-
-      - name: Install Dependencies & Build
-        run: |
-          npm install
-          npm run build
-
-      - name: Transfer Build to EC2
-        uses: appleboy/scp-action@master
-        with:
-          host: ${{ secrets.EC2_HOST }}
-          username: ubuntu
-          key: ${{ secrets.EC2_SSH_KEY }}
-          source: "build/*"
-          target: "/var/www/html/project"
-
-      - name: Restart Nginx
+      - name: SSH into EC2 and Deploy
         uses: appleboy/ssh-action@master
         with:
           host: ${{ secrets.EC2_HOST }}
           username: ubuntu
           key: ${{ secrets.EC2_SSH_KEY }}
-          script: sudo systemctl restart nginx
+          script: |
+            echo "Navigating to project directory..."
+            cd /var/www/html/GSP_Frontend
+
+            echo "Pulling latest changes from GitHub..."
+            sudo git pull origin main
+
+            echo "Installing dependencies & building React app..."
+            sudo npm install
+            sudo npm run build
+
+            echo "Restarting Nginx with sudo privileges..."
+            sudo systemctl restart nginx
+
+            echo "Deployment completed successfully!"
