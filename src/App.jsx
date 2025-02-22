@@ -22,6 +22,7 @@ import SelectRegionWithCourse from "./pages/Final/SelectRegionWithCourse";
 import RegionCourseList from "./pages/Final/RegionCourseList";
 import YourCart from "./pages/Final/YourCart";
 import LockSeats from "./pages/Final/LockSeats";
+import AdminLogin from "./pages/Admin/AdminLogin";
 
 const router = createBrowserRouter(
   createRoutesFromElements(
@@ -62,6 +63,7 @@ const router = createBrowserRouter(
         <Route path="city/:city/:courseType" element={<ShowCityCourses />} />
         <Route path="payment" element={<Payment />} />
       </Route>
+      <Route path="/admin/login" element={<AdminLogin />} />
     </Route>
   )
 );
