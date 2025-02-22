@@ -5,7 +5,7 @@ import L from "leaflet";
 import toast from "react-hot-toast";
 import { MapPin, School, Users, UserCheck } from "lucide-react";
 import "leaflet/dist/leaflet.css";
-import mpGeoJson from "../assets/madhya_pradesh.geojson";
+import mpGeoJson from "../../assets/madhya_pradesh.geojson";
 
 const CityTooltip = ({ cityName, courseType, cityStats }) => (
   <div className="bg-white p-3 rounded-xl shadow-lg border border-gray-100 min-w-[220px] backdrop-blur-sm">
