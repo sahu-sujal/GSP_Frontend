@@ -197,7 +197,7 @@ left_seats = total_seats - locked_seats - booked_seats
 ✅ **Locked Seats Handling** (Reserved seats for specific quota).  
 ✅ **Adopted Students Tracking** (Total students a user booked).  
 ✅ **OTP Verification** (Before payment).  
-✅ **Payment Processing** (Stripe/Razorpay).  
+✅ **Payment Processing** (Stripe/Razorrpay).  
 
 ---
 
