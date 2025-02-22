@@ -86,11 +86,12 @@ const StateMap = ({
   };
 
   useEffect(() => {
-    fetch("/madhya_pradesh.geojson")
+    fetch("https://raw.githubusercontent.com/priyanshudayal1/dont_delete/main/madhya_pradesh.geojson")
       .then((response) => {
         if (!response.ok) {
           throw new Error("Network response was not ok");
         }
+        
         return response.json();
       })
       .then((data) => setGeoData(data))
