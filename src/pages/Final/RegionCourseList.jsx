@@ -251,12 +251,9 @@ const RegionCourseList = () => {
   }, [courses, city, courseType]);
 
   const coursesByInstitute = useMemo(() => {
-    console.log(courses);
-    console.log(cityCourses);
     if (!Array.isArray(courses)) return {};
 
     return cityCourses.reduce((acc, course) => {
-      console.log("redunce", course);
       const institute = titleCase(course.institute_name) || "Other Institutes"; // Using institute_name instead of institute
       if (!acc[institute]) {
         acc[institute] = [];
