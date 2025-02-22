@@ -11,12 +11,10 @@ jobs:
 
     steps:
       - name: SSH into EC2 and Deploy
-        uses: appleboy/ssh-action@master
-        with:
-          host: ${{ secrets.EC2_HOST }}
-          username: ubuntu
-          key: ${{ secrets.EC2_SSH_KEY }}
-          script: |
+        run: |
+          echo "${{ secrets.EC2_SSH_KEY }}" > ec2_key.pem
+          chmod 600 ec2_key.pem
+          ssh -o StrictHostKeyChecking=no -i ec2_key.pem ubuntu@${{ secrets.EC2_HOST }} << 'EOF'
             echo "Navigating to project directory..."
             cd /var/www/html/GSP_Frontend
 
@@ -31,3 +29,5 @@ jobs:
             sudo systemctl restart nginx
 
             echo "Deployment completed successfully!"
+          EOF
+          rm -f ec2_key.pem
