@@ -1,3 +1,4 @@
+import { useEffect, useState } from "react";
 import { MapContainer, TileLayer, GeoJSON } from "react-leaflet";
 import { useNavigate } from "react-router-dom";
 import ReactDOMServer from "react-dom/server";
@@ -5,7 +6,6 @@ import L from "leaflet";
 import toast from "react-hot-toast";
 import { MapPin, School, Users, UserCheck } from "lucide-react";
 import "leaflet/dist/leaflet.css";
-import mpGeoJson from "../../assets/madhya_pradesh.geojson";
 
 const CityTooltip = ({ cityName, courseType, cityStats }) => (
   <div className="bg-white p-3 rounded-xl shadow-lg border border-gray-100 min-w-[220px] backdrop-blur-sm">
@@ -51,6 +51,8 @@ const StateMap = ({
   selectedCourseType,
   cityData = {}, // This now receives the aggregated city stats
 }) => {
+  const [geoData, setGeoData] = useState(null);
+  const [error, setError] = useState(null);
   const navigate = useNavigate();
 
   // MP bounds approximation
@@ -82,6 +84,21 @@ const StateMap = ({
       hover: "#fb923c", // orange-400
     },
   };
+
+  useEffect(() => {
+    fetch("/madhya_pradesh.geojson")
+      .then((response) => {
+        if (!response.ok) {
+          throw new Error("Network response was not ok");
+        }
+        return response.json();
+      })
+      .then((data) => setGeoData(data))
+      .catch((error) => {
+        console.error("Error loading GeoJSON:", error);
+        setError(error.message);
+      });
+  }, []);
 
   const getFeatureStyle = (feature) => {
     const cityName = feature.properties.NAME_2;
@@ -203,6 +220,16 @@ const StateMap = ({
     }
   };
 
+  if (error) {
+    return (
+      <div className="w-full h-[500px] rounded-lg overflow-hidden border border-gray-200 bg-gray-50 flex items-center justify-center">
+        <p className="text-gray-500">
+          Failed to load map data. Please try again later.
+        </p>
+      </div>
+    );
+  }
+
   return (
     <div className="w-full h-[700px] rounded-lg overflow-hidden border border-gray-200 bg-gray-50">
       <MapContainer
@@ -220,11 +247,13 @@ const StateMap = ({
           className="map-tiles"
           bounds={mpBounds}
         />
-        <GeoJSON
-          data={mpGeoJson}
-          style={getFeatureStyle}
-          onEachFeature={onEachFeature}
-        />
+        {geoData && (
+          <GeoJSON
+            data={geoData}
+            style={getFeatureStyle}
+            onEachFeature={onEachFeature}
+          />
+        )}
       </MapContainer>
       <style>{`
         .map-tiles {
